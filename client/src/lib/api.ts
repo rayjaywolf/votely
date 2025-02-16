@@ -38,4 +38,16 @@ export const api = {
     if (!response.ok) throw new Error("Failed to vote");
     return response.json();
   },
+
+  removeVote: async (pollId: string, optionId: string): Promise<Poll> => {
+    const response = await fetch(`${API_URL}/polls/${pollId}/vote`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ optionId }),
+    });
+    if (!response.ok) throw new Error("Failed to remove vote");
+    return response.json();
+  },
 }; 

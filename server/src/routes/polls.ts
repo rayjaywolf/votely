@@ -124,4 +124,52 @@ router.post('/:id/vote', async (req, res) => {
   }
 });
 
+// Remove vote from a poll option
+router.delete('/:id/vote', async (req, res) => {
+  try {
+    const { id: pollId } = req.params;
+    const { optionId } = voteSchema.parse(req.body);
+
+    // First verify that the option belongs to this poll
+    const option = await prisma.option.findFirst({
+      where: {
+        id: optionId,
+        pollId: pollId,
+      },
+    });
+
+    if (!option) {
+      return res.status(404).json({ error: 'Option not found for this poll' });
+    }
+
+    // Update the vote count and return the updated poll with all options
+    await prisma.option.update({
+      where: { id: optionId },
+      data: {
+        votes: {
+          decrement: 1,
+        },
+      },
+    });
+
+    // Fetch and return the updated poll with all options
+    const updatedPoll = await prisma.poll.findUnique({
+      where: { id: pollId },
+      include: {
+        options: {
+          orderBy: { id: 'asc' }
+        },
+      },
+    });
+
+    res.json(updatedPoll);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: error.errors });
+    } else {
+      res.status(500).json({ error: 'Failed to remove vote' });
+    }
+  }
+});
+
 export const pollRoutes = router; 

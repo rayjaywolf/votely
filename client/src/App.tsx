@@ -8,10 +8,10 @@ import { Header } from "@/components/Header";
 function App() {
   return (
     <Router>
-      <div className="flex min-h-screen w-full flex-col">
+      <div className="min-h-screen w-full bg-gradient-to-b from-background to-muted/20">
         <Header />
-        <main className="flex-1 w-full px-4 py-8">
-          <div className="max-w-7xl mx-auto w-full">
+        <main className="px-4 py-8 md:py-12">
+          <div className="max-w-2xl mx-auto w-full">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/create" element={<CreatePoll />} />
@@ -19,7 +19,7 @@ function App() {
             </Routes>
           </div>
         </main>
-        <Toaster />
+        <Toaster position="top-center" />
       </div>
     </Router>
   );

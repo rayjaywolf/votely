@@ -26,63 +26,63 @@ export const Home = () => {
     fetchPolls();
   }, []);
 
-  return (
-    <div className="space-y-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Latest Polls</h1>
-          <p className="text-muted-foreground mt-1">
-            Browse and vote on active polls
-          </p>
-        </div>
-        <Button asChild size="lg" className="gap-2">
-          <Link to="/create">
-            <Plus className="h-5 w-5" />
-            Create Poll
-          </Link>
-        </Button>
+  if (loading) {
+    return (
+      <div className="grid gap-6">
+        {Array(3).fill(0).map((_, i) => (
+          <Skeleton key={i} className="h-[140px] w-full rounded-xl" />
+        ))}
       </div>
+    );
+  }
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {loading ? (
-          Array(3)
-            .fill(0)
-            .map((_, i) => (
-              <Card key={i} className="border border-muted/40">
-                <CardHeader>
-                  <Skeleton className="h-6 w-3/4" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-4 w-1/2" />
-                </CardContent>
-              </Card>
-            ))
-        ) : (
-          polls.map((poll) => (
-            <Link key={poll.id} to={`/poll/${poll.id}`}>
-              <Card className="group border border-muted/40 hover:border-primary/20 hover:shadow-md transition-all duration-200">
-                <CardHeader>
-                  <CardTitle className="text-xl line-clamp-2">
-                    {poll.question}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
-                      <ChartBar className="h-4 w-4" />
-                      <span>{poll.options.length} options</span>
-                    </div>
-                    <span>•</span>
-                    <span>
-                      {poll.options.reduce((sum, opt) => sum + opt.votes, 0)} votes
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
+  if (polls.length === 0) {
+    return (
+      <Card className="border-dashed">
+        <CardContent className="py-12 flex flex-col items-center justify-center text-center space-y-4">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <ChartBar className="h-6 w-6 text-primary" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-xl">No polls yet</h3>
+            <p className="text-muted-foreground">Create your first poll to get started</p>
+          </div>
+          <Button asChild className="rounded-full">
+            <Link to="/create" className="gap-2">
+              <Plus className="h-4 w-4" />
+              Create Poll
             </Link>
-          ))
-        )}
-      </div>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="grid gap-6">
+      {polls.map((poll) => (
+        <Link key={poll.id} to={`/poll/${poll.id}`}>
+          <Card className="group border border-muted/40 hover:border-primary/20 hover:shadow-lg transition-all duration-200">
+            <CardHeader>
+              <CardTitle className="text-xl line-clamp-2 group-hover:text-primary transition-colors">
+                {poll.question}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <ChartBar className="h-4 w-4" />
+                  <span>{poll.options.length} options</span>
+                </div>
+                <span>•</span>
+                <span>
+                  {poll.options.reduce((sum, opt) => sum + opt.votes, 0)} votes
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      ))}
     </div>
   );
 }; 

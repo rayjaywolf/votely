@@ -51,35 +51,37 @@ export const CreatePoll = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div>
       <Button
         variant="ghost"
         size="sm"
-        className="mb-8 gap-2"
+        className="mb-8 gap-2 rounded-full group"
         onClick={() => navigate(-1)}
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
         Back
       </Button>
 
       <Card className="border border-muted/40">
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle className="text-2xl">Create a New Poll</CardTitle>
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Create a New Poll
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-8">
             <div className="space-y-2">
               <Input
                 placeholder="Enter your question"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
-                className="text-lg"
+                className="text-lg border-muted/60 focus:border-primary/40"
               />
             </div>
 
             <div className="space-y-4">
               {options.map((option, index) => (
-                <div key={index} className="flex gap-2">
+                <div key={index} className="flex gap-2 group">
                   <Input
                     placeholder={`Option ${index + 1}`}
                     value={option}
@@ -88,6 +90,7 @@ export const CreatePoll = () => {
                       newOptions[index] = e.target.value;
                       setOptions(newOptions);
                     }}
+                    className="border-muted/60 focus:border-primary/40 group-hover:border-primary/20"
                   />
                   {options.length > 2 && (
                     <Button
@@ -95,6 +98,7 @@ export const CreatePoll = () => {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveOption(index)}
+                      className="text-muted-foreground hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -104,7 +108,7 @@ export const CreatePoll = () => {
               <Button
                 type="button"
                 variant="outline"
-                className="w-full gap-2"
+                className="w-full gap-2 rounded-full border-dashed"
                 onClick={handleAddOption}
               >
                 <Plus className="h-4 w-4" />
@@ -115,7 +119,7 @@ export const CreatePoll = () => {
           <CardFooter>
             <Button 
               type="submit" 
-              className="w-full h-12 text-base"
+              className="w-full h-12 text-base rounded-full"
               disabled={submitting}
             >
               Create Poll
